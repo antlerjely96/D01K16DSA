@@ -219,6 +219,22 @@ public class Main {
                 ii.	Tạo hai lớp dẫn xuất cụ thể (ví dụ: ThueNVCThuc và ThueNVThoiVu) để thực thi logic tính thuế riêng (10% và 5%).
                 iii.	Cập nhật lớp NhanVien để chứa một thuộc tính (property) ThueApDung kiểu ThueStrategy
                 iv.	Cập nhật phương thức TinhTongLuongPhaiTra() trong lớp CongTy để nó truyền lương thực lĩnh của mỗi nhân viên vào ThueApDung của nhân viên đó để tính thuế, sau đó trừ đi tiền thuế đó để tính tổng lương ròng thực tế công ty phải chi trả.
+
+            2.	Xây dựng hệ thống quản lý nhân sự cơ bản
+            a.	Viết Class cơ sở có tên là TaiKhoan (Account). Lớp này phải có các trường dữ liệu private sau: SoTaiKhoan (string), TenChuTaiKhoan (string), và SoDu (decimal). Tạo các properties công khai (public) có chế độ chỉ đọc (get only) cho các trường trên (trừ SoDu có thể thay đổi nhưng phải được quản lý nội bộ). Cài đặt một Constructor cho phép khởi tạo đối tượng với đủ 3 thông tin trên (lưu ý: SoDu ban đầu phải >= 50000 VND).
+            b.	Viết Class TaiKhoanTietKiem (SavingsAccount) kế thừa từ lớp TaiKhoan. Thêm một trường dữ liệu private mới cho lớp con là LaiSuat (InterestRate - double). Thêm một property công khai tương ứng cho LaiSuat.
+            c.	Định nghĩa một Interface có tên là IGiaoDich (ITransactable) với hai phương thức công khai sau:
+            i.	NapTien(decimal soTien): Trả về bool (Thành công/Thất bại). Phương thức này luôn thành công và cộng vào SoDu
+            ii.	RutTien(decimal soTien): Trả về bool (Thành công/Thất bại). Thực thi (Implement) interface IGiaoDich cho lớp TaiKhoan. Phương thức này chỉ thành công nếu SoDu hiện tại >= soTien và sau đó trừ đi soTien.
+            d.	Trong lớp cơ sở TaiKhoan, định nghĩa một phương thức virtual tên là InThongTin() (PrintInfo) không có tham số và không trả về giá trị (hoặc trả về string). Phương thức này in ra (hoặc trả về) thông tin cơ bản (Số TK, Tên, Số dư). Trong lớp TaiKhoanTietKiem, ghi đè (override) phương thức InThongTin() để in ra (hoặc trả về) thông tin cơ bản cộng thêm LaiSuat của tài khoản tiết kiệm.
+            e.	Trong lớp TaiKhoanTietKiem, ghi đè (override) phương thức RutTien(decimal soTien) từ interface IGiaoDich.Áp dụng một phí rút tiền là $\text{5.000}$ VND cho mỗi lần rút tiền từ tài khoản tiết kiệm.Phương thức RutTien mới phải kiểm tra:
+                i.	Số tiền rút + Phí <= SoDu
+                ii.	Nếu thỏa mãn, trừ cả số tiền rút và phí khỏi SoDu và trả về true. Ngược lại, trả về false.
+                f.	Yêu cầu xây dựng một lớp cho Giao Dịch Có Hạn Mức (Ví dụ: Tài khoản Vàng/Platinum). Loại tài khoản này có thể rút tiền tối đa 50.000.000 VND/lần.
+                i.	Định nghĩa một Abstract Class có tên là TaiKhoanCoHanMuc (LimitedAccount) kế thừa từ TaiKhoan và thực thi interface IgiaoDich
+                ii.	Trong lớp TaiKhoanCoHanMuc, ghi đè phương thức RutTien(decimal soTien) để kiểm tra: Nếu soTien > 50.000.000, phương thức phải ném ra (throw) một Custom Exception (ngoại lệ tự định nghĩa) có tên HanMucVuotQuaException (LimitExceededException). Ngoại lệ này phải có thông báo rõ ràng về việc vượt quá hạn mức.
+                iii.	Trong hàm Main, viết một đoạn code thử gọi phương thức RutTien với số tiền > 50.000.000 của một đối tượng TaiKhoanCoHanMuc và sử dụng khối try-catch để bắt (catch) ngoại lệ HanMucVuotQuaException và in ra thông báo lỗi cho người dùng.
+
          */
     }
 }
